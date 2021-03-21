@@ -16,6 +16,15 @@ public class File {
 
     private byte[] filedata;
 
+    public File(Integer fileId, String filename, String contenttype, String filesize, Integer userid, byte[] filedata) {
+        this.fileId = fileId;
+        this.filename = filename;
+        this.contenttype = contenttype;
+        this.filesize = filesize;
+        this.userid = userid;
+        this.filedata = filedata;
+    }
+
     public void setFileId(Integer fileId) {
         this.fileId = fileId;
     }

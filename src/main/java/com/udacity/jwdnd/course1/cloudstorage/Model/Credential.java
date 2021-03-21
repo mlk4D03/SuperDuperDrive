@@ -12,7 +12,18 @@ public class Credential {
 
     private String password;
 
+
     private Integer userid;
+
+    public Credential(Integer credentialid, String url, String username, String key, String password, Integer userid) {
+        this.credentialid = credentialid;
+        this.url = url;
+        this.username = username;
+        this.key = key;
+        this.password = password;
+        this.userid = userid;
+    }
+
 
     public void setCredentialid(Integer credentialid) {
         this.credentialid = credentialid;
