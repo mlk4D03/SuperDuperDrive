@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 @RequestMapping("/note")
@@ -31,13 +30,9 @@ public class NoteController {
 
     @GetMapping("/delete")
     String delete(@RequestParam Integer noteid, Model model, Authentication authentication){
-        if(this.noteService.getNote(noteid).getUserid().equals(this.userService.getUserId(authentication.getName()))){
-            int deletedRows = this.noteService.deleteNote(noteid);
-            if(deletedRows < 0){
-                model.addAttribute("noteError",true);
-            }
-        } else {
-            model.addAttribute("deleteNoteDenied",true);
+        int deletedRows = this.noteService.deleteNote(noteid);
+        if(deletedRows < 0){
+            model.addAttribute("noteError",true);
         }
 
         model.addAttribute("activeTab","notes");
@@ -55,13 +50,9 @@ public class NoteController {
     String add(@ModelAttribute Note note, Model model, Authentication authentication){
         String username = authentication.getName();
         if(this.noteService.isNoteAlreadyAvailable(note.getNoteid())){
-            if(this.noteService.getNote(note.getNoteid()).getUserid().equals(this.userService.getUserId(authentication.getName()))){
-                int updatedNote = this.noteService.updateNote(note.getNotetitle(),note.getDescription(),note.getNoteid());
-                if(updatedNote < 0){
-                    model.addAttribute("noteError",true);
-                }
-            } else {
-                model.addAttribute("deleteNoteDenied",true);
+            int updatedNote = this.noteService.updateNote(note.getNotetitle(),note.getDescription(),note.getNoteid());
+            if(updatedNote < 0){
+                model.addAttribute("noteError",true);
             }
         } else {
             Integer userId = this.userService.getUserId(username);

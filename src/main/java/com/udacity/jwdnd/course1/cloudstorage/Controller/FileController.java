@@ -39,13 +39,9 @@ public class FileController {
     String delete(@RequestParam Integer fileid, Model model, Authentication authentication){
         File file = this.fileService.getFile(fileid);
         Integer userid = this.userService.getUserId(authentication.getName());
-        if(file.getUserid().equals(userid)){
-            int deletedRows = this.fileService.deleteFile(fileid);
-            if(deletedRows < 0){
-                model.addAttribute("fileError",true);
-            }
-        } else {
-            model.addAttribute("deleteFileDenied",true);
+        int deletedRows = this.fileService.deleteFile(fileid);
+        if(deletedRows < 0){
+            model.addAttribute("fileError",true);
         }
 
         model.addAttribute("activeTab","files");

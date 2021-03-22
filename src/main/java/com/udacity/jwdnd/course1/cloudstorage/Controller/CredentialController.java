@@ -29,14 +29,10 @@ public class CredentialController {
 
     @GetMapping("/delete")
     String delete(@RequestParam Integer credentialid, Model model, Authentication authentication){
-        if(this.credentialService.getCredential(credentialid).getUserid().equals(this.userService.getUserId(authentication.getName()))){
             int deletedRows = this.credentialService.deleteCredential(credentialid);
             if(deletedRows < 0){
                 model.addAttribute("credentialError",true);
             }
-        } else {
-            model.addAttribute("deleteCredentialDenied",true);
-        }
 
         model.addAttribute("notes",this.noteService.getAllNotes());
         model.addAttribute("credentials",this.credentialService.getAllCredentials());
@@ -53,14 +49,10 @@ public class CredentialController {
     String add(@ModelAttribute Credential credential, Model model, Authentication authentication){
         Integer userid = this.userService.getUserId(authentication.getName());
         if(this.credentialService.isCredentialAlreadyAvailable(credential.getCredentialid())){
-            if(this.credentialService.getCredential(credential.getCredentialid()).getUserid().equals(userid)){
                 int updatedCredential = this.credentialService.updateCredential(credential,userid);
                 if(updatedCredential < 0){
                     model.addAttribute("credentialError",true);
                 }
-            } else {
-                model.addAttribute("deleteCredentialDenied",true);
-            }
         } else {
             int addedRows = this.credentialService.addCredential(credential,userid);
             if(addedRows < 0){
