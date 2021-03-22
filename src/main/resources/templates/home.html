@@ -6,7 +6,7 @@
 
         <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
-        <title>Home</title>
+        <title>SuperDuperDrive</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
@@ -25,7 +25,7 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show" th:classappend="${#strings.equals(activeTab,'files') ? 'show active' : ''}" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/home/fileupload}">
+                        <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/file/upload}">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
                                     <div class="col-sm-2">
@@ -37,9 +37,21 @@
                                     <div class="col-sm-4">
                                         <button type="submit" class="btn btn-dark">Upload</button>
                                     </div>
-                                    <div class="alert alert-danger" th:if="${actiondenied}">
+
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${deleteFileDenied}">
                                         You are not allowed to delete this File. You are not the owner!
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
+
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${fileError}">
+                                        Ups. There was a problem. Please try again !
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -54,8 +66,8 @@
                                 <tbody>
                                 <tr th:each="file : ${files}">
                                     <td>
-                                        <a th:href="@{/home/download(filename=${file.filename})}" target="_blank" class="btn btn-success">View</a>
-                                        <a th:href="@{/home/filedelete(fileid=${file.getFileId()})}" class="btn btn-danger" >Delete</a>
+                                        <a th:href="@{/file/download(fileid=${file.getFileId()})}" target="_blank" class="btn btn-success">View</a>
+                                        <a th:href="@{/file/delete(fileid=${file.getFileId()})}" class="btn btn-danger" >Delete</a>
                                     </td>
                                     <th scope="row" th:text="${file.filename}">ExampleFile.txt</th>
                                 </tr>
@@ -67,6 +79,20 @@
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${deleteNoteDenied}">
+                            You are not allowed to edit or delete this Note. You are not the owner!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${noteError}">
+                            Ups. There was a problem. Please try again !
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
@@ -81,7 +107,7 @@
                                     <tr th:each="note: ${notes}">
                                         <td>
                                             <button type="button" class="btn btn-success" th:noteId="${note.noteid}" th:title="${note.notetitle}" th:description="${note.description}" onclick="showNoteModal(this.getAttribute('noteId'),this.getAttribute('title'),this.getAttribute('description'))">Edit</button>
-                                            <button type="Button" class="btn btn-danger" th:noteId="${note.noteid}"  onclick="showDeleteModal(this.getAttribute('noteId'))">Delete</button>
+                                            <a th:href="@{/note/delete(noteid=${note.getNoteid()})}" class="btn btn-danger" >Delete</a>
                                         </td>
                                         <th scope="row" th:text="${note.notetitle}">Example Note Title</th>
                                         <td th:text="${note.description}">Example Note Description </td>
@@ -100,7 +126,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST" th:action="@{/home/note}">
+                                        <form action="#" method="POST" th:action="@{/note/add}">
                                             <input type="hidden" name="noteid" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -121,35 +147,25 @@
                             </div>
                         </div>
 
-                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="#" method="POST" th:action="@{/home/deletenote}">
-                                            <input type="hidden" name="noteid" id="note-id-delete">
-                                            <h4>Do you want to delete this note?</h4>
-                                            <button id="noteDelete" type="submit" class="d-none"></button>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="$('#noteDelete').click();">Delete</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="tab-pane fade" th:classappend="${#strings.equals(activeTab,'credentials') ? 'show active' : ''}" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${deleteCredentialDenied}">
+                            You are not allowed to edit or delete this Credential. You are not the owner!
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${credentialError}">
+                            Ups. There was a problem. Please try again !
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-striped" th:object="${credentials}" id="credentialTable">
@@ -165,8 +181,9 @@
                                 <tr th:each="credential : ${credentials}">
                                     <td>
                                         <button type="button" class="btn btn-success" th:credentialid="${credential.credentialid}" th:credentialurl="${credential.url}" th:credentialusername="${credential.username}"
-                                                th:decryptedpassword="${encryptionService.decryptValue(credential.password,credential.key)}" onclick="showCredentialModal(this.getAttribute('credentialid'),this.getAttribute('credentialurl'),this.getAttribute('credentialusername'),this.getAttribute('decryptedpassword'))">Edit</button>
-                                        <button type="button" th:credentialid="${credential.credentialid}" class="btn btn-danger" onclick="showCredentialDeleteModal(this.getAttribute('credentialid'))">Delete</button>
+                                                th:decryptedpassword="${encryptionService.decryptValue(credential.password,credential.key)}" onclick="showCredentialModal(this.getAttribute('credentialid'),this.getAttribute('credentialurl'),this.getAttribute('credentialusername'),this.getAttribute('decryptedpassword'))" th:if="${credential.getUserid()} == ${iduser}">Edit</button>
+                                        <button type="button" class="btn btn-success" th:unless="${credential.getUserid()} == ${iduser}" disabled>Edit</button>
+                                        <a th:href="@{/credential/delete(credentialid=${credential.getCredentialid()})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.url}">Example Credential URL</th>
                                     <td th:text="${credential.username}">Example Credential Username</td>
@@ -186,7 +203,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST" th:action="@{/home/credential}">
+                                        <form action="#" method="POST" th:action="@{/credential/add}">
                                             <input type="hidden" name="credentialid" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
@@ -210,29 +227,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="credentialDeleteModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="credentialDeleteModalLabel">Delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="#" method="POST" th:action="@{/home/credentialdelete}">
-                                            <input type="hidden" name="credentialid" id="credential-id-delete">
-                                            <h4>Do you want to delete this Credential?</h4>
-                                            <button id="credentialDeleteSubmit" type="submit" class="d-none"></button>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="$('#credentialDeleteSubmit').click();">Delete</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -252,10 +246,6 @@
                 $('#noteModal').modal('show');
             }
 
-            function showDeleteModal(noteId) {
-                $('#note-id-delete').val(noteId ? noteId : '');
-                $('#deleteModal').modal('show');
-            }
 
             // For opening the credentials modal
             function showCredentialModal(credentialId, url, username, password) {
@@ -264,11 +254,6 @@
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
-            }
-
-            function showCredentialDeleteModal(credentialId) {
-                $('#credential-id-delete').val(credentialId ? credentialId : '');
-                $('#credentialDeleteModal').modal('show');
             }
 
         </script>

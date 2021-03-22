@@ -38,9 +38,13 @@ public class HomeController {
     FileService fileService;
 
     @GetMapping
-    String getHomePage(Model model){
+    String getHomePage(Model model,Authentication authentication){
         model.addAttribute("activeTab","files");
         model.addAttribute("notes",this.noteService.getAllNotes());
+        model.addAttribute("credentials",this.credentialService.getAllCredentials());
+        model.addAttribute("files",this.fileService.getAllFiles());
+        model.addAttribute("encryptionService",this.encryptionService);
+        model.addAttribute("iduser",this.userService.getUserId(authentication.getName()));
         return "home";
     }
 
@@ -103,8 +107,8 @@ public class HomeController {
     }
 
     @GetMapping("/download")
-    ResponseEntity downloadFile(@RequestParam String filename){
-        File downloadFile = this.fileService.getFile(filename);
+    ResponseEntity downloadFile(@RequestParam Integer fileid){
+        File downloadFile = this.fileService.getFile(fileid);
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(downloadFile.getContenttype())).
                 header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + downloadFile.getFilename() +

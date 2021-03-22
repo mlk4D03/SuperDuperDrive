@@ -53,6 +53,10 @@ public class CredentialService {
         return this.credentialMapper.updateCredentials(credential.getUrl(),this.encryptionService.encryptValue(credential.getPassword(),key),credential.getUsername(),userid);
     }
 
+    public Credential getCredential(Integer credentialid){
+        return this.credentialMapper.getCredential(credentialid);
+    }
+
     public int deleteCredential(Integer credentialid){
         return this.credentialMapper.deleteCredential(credentialid);
     }

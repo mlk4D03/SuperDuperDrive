@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 @Service
@@ -30,7 +29,7 @@ public class FileService {
         return this.fileMapper.getAllFiles();
     }
 
-    public File getFile(String filename){
-        return this.fileMapper.getFile(filename);
+    public File getFile(Integer fileid){
+        return this.fileMapper.getFile(fileid);
     }
 }

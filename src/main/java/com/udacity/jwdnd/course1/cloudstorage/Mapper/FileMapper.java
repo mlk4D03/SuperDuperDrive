@@ -11,8 +11,8 @@ public interface FileMapper {
     @Select("SELECT * FROM FILES")
     public List<File> getAllFiles();
 
-    @Select("SELECT * FROM FILES where filename = #{filename}")
-    public File getFile(String filename);
+    @Select("SELECT * FROM FILES where fileId = #{fileid}")
+    public File getFile(Integer fileid);
 
 
     @Insert("INSERT INTO FILES (filename,contenttype,filesize,userid,filedata) VALUES(#{filename},#{contenttype},#{filesize},#{userid},#{filedata})")
