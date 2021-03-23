@@ -12,7 +12,7 @@
         <div class="container">
             <div id="logoutDiv">
                 <form action="#" method="POST" th:action="@{/logout}">
-                    <button type="submit" class="btn btn-secondary float-right">Logout</button>
+                    <button type="submit" class="btn btn-secondary float-right" id="logout">Logout</button>
                 </form>
             </div>
             <div id="contentDiv" style="clear: right;">
@@ -35,16 +35,8 @@
                                         <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
                                     </div>
                                     <div class="col-sm-4">
-                                        <button type="submit" class="btn btn-dark">Upload</button>
+                                        <button type="submit" class="btn btn-dark" id="uploadButton">Upload</button>
                                     </div>
-
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${fileError}">
-                                        Ups. There was a problem. Please try again !
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-
                                 </div>
                             </div>
                         </form>
@@ -59,9 +51,9 @@
                                 <tbody>
                                 <tr th:each="file : ${files}">
                                     <td>
-                                        <a th:href="@{/file/download(fileid=${file.getFileId()})}" target="_blank" class="btn btn-success">View</a>
-                                        <a th:href="@{/file/delete(fileid=${file.getFileId()})}" th:if="${file.getUserid()} == ${iduser}" class="btn btn-danger" >Delete</a>
-                                        <a th:unless="${file.getUserid()} == ${iduser}" class="btn btn-danger" disabled>Delete</a>
+                                        <a th:href="@{/file/download(fileid=${file.getFileId()})}" target="_blank" class="btn btn-success" id="downloadFile">View</a>
+                                        <a th:href="@{/file/delete(fileid=${file.getFileId()})}" th:if="${file.getUserid()} == ${iduser}" class="btn btn-danger" id="deleteButton">Delete</a>
+                                        <a th:unless="${file.getUserid()} == ${iduser}" class="btn btn-danger" id="deleteButtonDisabled" disabled>Delete</a>
                                     </td>
                                     <th scope="row" th:text="${file.filename}">ExampleFile.txt</th>
                                 </tr>
@@ -74,12 +66,6 @@
                             + Add a New Note
                         </button>
 
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${noteError}">
-                            Ups. There was a problem. Please try again !
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
@@ -142,13 +128,6 @@
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
-
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${credentialError}">
-                            Ups. There was a problem. Please try again !
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
 
                         <div class="table-responsive">
                             <table class="table table-striped" th:object="${credentials}" id="credentialTable">

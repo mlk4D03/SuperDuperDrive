@@ -32,4 +32,8 @@ public class FileService {
     public File getFile(Integer fileid){
         return this.fileMapper.getFile(fileid);
     }
+
+    public boolean isFilenameInUse(String filename){
+        return this.fileMapper.getFileByName(filename) != null;
+    }
 }

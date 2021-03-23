@@ -28,13 +28,8 @@ public class NoteController {
     @Autowired
     FileService fileService;
 
-    @GetMapping("/delete")
-    String delete(@RequestParam Integer noteid, Model model, Authentication authentication){
-        int deletedRows = this.noteService.deleteNote(noteid);
-        if(deletedRows < 0){
-            model.addAttribute("noteError",true);
-        }
-
+    @GetMapping
+    String getNotePage(Model model, Authentication authentication){
         model.addAttribute("activeTab","notes");
         model.addAttribute("encryptionService",this.encryptionService);
 
@@ -46,30 +41,40 @@ public class NoteController {
         return "home";
     }
 
+    @GetMapping("/delete")
+    String delete(@RequestParam Integer noteid, Model model, Authentication authentication){
+        model.addAttribute("link","/note");
+        int deletedRows = this.noteService.deleteNote(noteid);
+        if(deletedRows < 0){
+            model.addAttribute("failure",true);
+            return "result";
+        }
+        model.addAttribute("success",true);
+        return "result";
+    }
+
     @PostMapping("/add")
     String add(@ModelAttribute Note note, Model model, Authentication authentication){
         String username = authentication.getName();
+        model.addAttribute("link","/note");
         if(this.noteService.isNoteAlreadyAvailable(note.getNoteid())){
             int updatedNote = this.noteService.updateNote(note.getNotetitle(),note.getDescription(),note.getNoteid());
             if(updatedNote < 0){
-                model.addAttribute("noteError",true);
+                model.addAttribute("failure",true);
+                return "result";
             }
+            model.addAttribute("success",true);
+            return "result";
         } else {
             Integer userId = this.userService.getUserId(username);
             int rowsAdded = this.noteService.createNote(note,userId);
             if(rowsAdded < 0){
-                model.addAttribute("noteError",true);
+                model.addAttribute("failure",true);
+                return "result";
             }
+            model.addAttribute("success",true);
+            return "result";
         }
-        model.addAttribute("activeTab","notes");
-
-        model.addAttribute("notes",this.noteService.getAllNotes());
-        model.addAttribute("credentials",this.credentialService.getAllCredentials());
-        model.addAttribute("files",this.fileService.getAllFiles());
-        model.addAttribute("encryptionService",this.encryptionService);
-        model.addAttribute("iduser",this.userService.getUserId(authentication.getName()));
-
-        return "home";
     }
 
 }
