@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
-
+/**
+ * Performs multiple queries for the user table.
+ */
 @Mapper
 public interface UserMapper {
 

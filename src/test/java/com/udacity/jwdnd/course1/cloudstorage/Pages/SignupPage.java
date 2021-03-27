@@ -5,6 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+/**
+ * This class is a selenium page object and represents the signup page and its elements.
+ */
 public class SignupPage {
 
     @FindBy(id = "backTologinLink")
@@ -34,43 +37,69 @@ public class SignupPage {
     @FindBy(id = "signupSuccessLink")
     WebElement signupSuccessLink;
 
-    public SignupPage(WebDriver driver){
-        PageFactory.initElements(driver,this);
+    public SignupPage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
     }
 
-    public void setInputFirstName(String firstname){
+    /**
+     * Types the first name into the input field.
+     *
+     * @param firstname the firstname of the user.
+     */
+    public void setInputFirstName(String firstname) {
+        this.inputFirstName.clear();
+        this.inputFirstName.click();
         this.inputFirstName.sendKeys(firstname);
     }
 
-    public void setInputLastName(String lastname){
+    /**
+     * Types in the last name of the user.
+     *
+     * @param lastname the last name.
+     */
+    public void setInputLastName(String lastname) {
+        this.inputLastName.clear();
+        this.inputLastName.click();
         this.inputLastName.sendKeys(lastname);
     }
 
-    public void setInputUsername(String username){
+    /**
+     * Types the username into the input field.
+     *
+     * @param username the username of the user.
+     */
+    public void setInputUsername(String username) {
+        this.inputUsername.clear();
+        this.inputUsername.click();
         this.inputUsername.sendKeys(username);
     }
 
-    public void setInputPassword(String password){
+    /**
+     * Types the password into the input field.
+     *
+     * @param password the password.
+     */
+    public void setInputPassword(String password) {
+        this.inputPassword.clear();
+        this.inputPassword.click();
         this.inputPassword.sendKeys(password);
     }
 
-    public void submit(){
+    /**
+     * Submits the Login inputs.
+     */
+    public void submit() {
         this.submitButton.click();
     }
 
-    public void backToLogin(){
-        this.backTologinLink.click();
+    /**
+     * Says whether the signup page is visible or not.
+     *
+     * @return true if the signup page is visible, false if not
+     */
+    public boolean isSignUpPageVisible() {
+        return this.inputFirstName.isDisplayed();
     }
 
-    public void toLoginAfterSignUpSuccess(){
-        this.signupSuccessLink.click();
-    }
 
-    public String getSignUpSuccessMessage(){
-        return this.signupSuccess.getText();
-    }
-
-    public String getSignUpErrorMessage(){
-        this.signupError.getText();
-    }
 }

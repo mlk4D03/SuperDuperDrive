@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.Model;
 
+/**
+ * Represents an entry in the user table.
+ */
 public class User {
 
     private Integer userid;
@@ -22,6 +25,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
     }
+
     public void setUserid(Integer userid) {
         this.userid = userid;
     }
@@ -65,7 +69,6 @@ public class User {
     public String getFirstname() {
         return firstname;
     }
-
 
 
     public String getLastname() {

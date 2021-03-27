@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * Performs multiple queries for the note table.
+ */
 @Mapper
 public interface NoteMapper {
 
@@ -15,7 +18,7 @@ public interface NoteMapper {
     public Note getNote(Integer noteid);
 
     @Insert("INSERT INTO NOTES (notetitle,notedescription,userid) VALUES(#{notetitle},#{notedescription},#{userid})")
-    @Options(useGeneratedKeys = true,keyProperty = "noteid")
+    @Options(useGeneratedKeys = true, keyProperty = "noteid")
     public int insertNote(Note note);
 
     @Update("UPDATE NOTES SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")

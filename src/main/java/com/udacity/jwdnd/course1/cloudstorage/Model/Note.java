@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.Model;
 
+/**
+ * Represents an entry in the note table.
+ */
 public class Note {
 
     private Integer noteid;
@@ -16,6 +19,7 @@ public class Note {
         this.notedescription = notedescription;
         this.userid = userid;
     }
+
     public void setNoteid(Integer noteid) {
         this.noteid = noteid;
     }
@@ -39,7 +43,6 @@ public class Note {
     public String getNotetitle() {
         return notetitle;
     }
-
 
 
     public String getDescription() {

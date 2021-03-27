@@ -1,7 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.Model;
 
-import java.sql.Blob;
-
+/**
+ * Represents an entry in the file table.
+ */
 public class File {
 
     private Integer fileId;

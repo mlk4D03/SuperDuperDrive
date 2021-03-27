@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * Performs multiple queries for the file table.
+ */
 @Mapper
 public interface FileMapper {
 

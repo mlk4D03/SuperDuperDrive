@@ -7,29 +7,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+/**
+ * Sets the AuthenticationService.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private AuthenticationService authenticationService;
 
-    public SecurityConfig(AuthenticationService authenticationService){
+    public SecurityConfig(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth){
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(this.authenticationService);
     }
 
     @Override
-    protected  void configure(HttpSecurity http) throws  Exception {
-        http.authorizeRequests().antMatchers("/logout","/signup","/css/**","/js/**")
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/logout", "/signup", "/css/**", "/js/**")
                 .permitAll().anyRequest().authenticated();
 
         http.formLogin().loginPage("/login").permitAll();
 
-        http.formLogin().defaultSuccessUrl("/home",true).failureUrl("/login-error");
+        http.formLogin().defaultSuccessUrl("/home", true).failureUrl("/login-error");
 
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/logout");
     }

@@ -15,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * Controller for handling incoming Get- and Post-Request for the endpoint /file
+ */
 @Controller
 @RequestMapping("/file")
 public class FileController {
@@ -34,69 +37,97 @@ public class FileController {
     @Autowired
     FileService fileService;
 
+    /**
+     * Returns the home page with the active file tab.
+     *
+     * @param model          Model to populate the html with data.
+     * @param authentication current Authentication to extract the user.
+     * @return the home page.
+     */
     @GetMapping
-    String getFilePage(Model model,Authentication authentication){
-        model.addAttribute("activeTab","files");
+    String getFilePage(Model model, Authentication authentication) {
+        model.addAttribute("activeTab", "files");
 
-        model.addAttribute("notes",this.noteService.getAllNotes());
-        model.addAttribute("credentials",this.credentialService.getAllCredentials());
-        model.addAttribute("files",this.fileService.getAllFiles());
-        model.addAttribute("encryptionService",this.encryptionService);
-        model.addAttribute("iduser",this.userService.getUserId(authentication.getName()));
+        model.addAttribute("notes", this.noteService.getAllNotes());
+        model.addAttribute("credentials", this.credentialService.getAllCredentials());
+        model.addAttribute("files", this.fileService.getAllFiles());
+        model.addAttribute("encryptionService", this.encryptionService);
+        model.addAttribute("iduser", this.userService.getUserId(authentication.getName()));
 
         return "home";
     }
 
 
+    /**
+     * Deletes a file from the file table.
+     *
+     * @param fileid         the id of the file.
+     * @param model          Model to populate the html with data.
+     * @param authentication current Authentication to extract he user.
+     * @return the home page without the deleted file.
+     */
     @GetMapping("/delete")
-    String delete(@RequestParam Integer fileid, Model model, Authentication authentication){
+    String delete(@RequestParam Integer fileid, Model model, Authentication authentication) {
         File file = this.fileService.getFile(fileid);
         Integer userid = this.userService.getUserId(authentication.getName());
         int deletedRows = this.fileService.deleteFile(fileid);
-        if(deletedRows < 0){
+        if (deletedRows < 0) {
             //model.addAttribute("fileError",true);
-            model.addAttribute("failure",true);
+            model.addAttribute("failure", true);
         } else {
-            model.addAttribute("success",true);
+            model.addAttribute("success", true);
         }
 
         model.addAttribute("link", "/file");
         return "result";
     }
 
+    /**
+     * Uploads a file into the database.
+     *
+     * @param fileUpload     the file.
+     * @param model          Model to populate the html with data.
+     * @param authentication current Authentication to extract the current user.
+     * @return the home page with the added file in the file table.
+     * @throws IOException
+     */
     @PostMapping("/upload")
-    String handleFileUpload(@ModelAttribute MultipartFile fileUpload, Model model, org.springframework.security.core.Authentication authentication) throws IOException {
-        model.addAttribute("link","/file");
-        if(!fileUpload.isEmpty()){
-            if(!this.fileService.isFilenameInUse(fileUpload.getOriginalFilename())){
-                int addedRows = this.fileService.insertFile(fileUpload,this.userService.getUserId(authentication.getName()));
-                if(addedRows < 0){
-                    model.addAttribute("failure",true);
+    String handleFileUpload(@ModelAttribute MultipartFile fileUpload, Model model, Authentication authentication) throws IOException {
+        model.addAttribute("link", "/file");
+        if (!fileUpload.isEmpty()) {
+            if (!this.fileService.isFilenameInUse(fileUpload.getOriginalFilename())) {
+                int addedRows = this.fileService.insertFile(fileUpload, this.userService.getUserId(authentication.getName()));
+                if (addedRows < 0) {
+                    model.addAttribute("failure", true);
                     return "result";
-                    //model.addAttribute("fileError",true);
                 }
-                model.addAttribute("success",true);
+                model.addAttribute("success", true);
                 return "result";
             } else {
-                model.addAttribute("error",true);
-                model.addAttribute("errorMessage","The filename already exists!");
+                model.addAttribute("error", true);
+                model.addAttribute("errorMessage", "The filename already exists!");
                 return "result";
-                //model.addAttribute("fileAlreadyExists",true);
             }
 
         }
 
-        model.addAttribute("error",true);
-        model.addAttribute("errorMessage","You have to choose a file!");
+        model.addAttribute("error", true);
+        model.addAttribute("errorMessage", "You have to choose a file!");
         return "result";
     }
 
+    /**
+     * Downloads a file from the file table.
+     *
+     * @param fileid the id of the file.
+     * @return the file.
+     */
     @GetMapping("/download")
-    ResponseEntity downloadFile(@RequestParam Integer fileid){
+    ResponseEntity downloadFile(@RequestParam Integer fileid) {
         File downloadFile = this.fileService.getFile(fileid);
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(downloadFile.getContenttype())).
-                header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + downloadFile.getFilename() +
+                header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + downloadFile.getFilename() +
                         "\"").body(new ByteArrayResource(downloadFile.getFiledata()));
     }
 }

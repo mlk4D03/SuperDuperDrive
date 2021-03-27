@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.Model;
 
+/**
+ * Represents an entry in the credential table.
+ */
 public class Credential {
 
     private Integer credentialid;
