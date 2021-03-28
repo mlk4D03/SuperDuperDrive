@@ -74,8 +74,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputPassword("Igel1234");
         this.signupPage.submit();
 
-        driver.get("http://localhost:" + port + "/login");
-
         this.loginPage.setInputUsername("maexchen");
         this.loginPage.setInputPassword("Igel1234");
         this.loginPage.submit();
@@ -103,8 +101,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputUsername("helmpeter");
         this.signupPage.setInputPassword("hsv");
         this.signupPage.submit();
-
-        driver.get("http://localhost:" + port + "/login");
 
         this.loginPage.setInputUsername("helmpeter");
         this.loginPage.setInputPassword("hsv");
@@ -141,8 +137,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputUsername("testuser1");
         this.signupPage.setInputPassword("admin");
         this.signupPage.submit();
-
-        driver.get("http://localhost:" + port + "/login");
 
         this.loginPage.setInputUsername("testuser1");
         this.loginPage.setInputPassword("admin");
@@ -184,8 +178,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputPassword("admin2");
         this.signupPage.submit();
 
-        driver.get("http://localhost:" + port + "/login");
-
         this.loginPage.setInputUsername("testuser2");
         this.loginPage.setInputPassword("admin2");
         this.loginPage.submit();
@@ -219,8 +211,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputUsername("testuser3");
         this.signupPage.setInputPassword("admin3");
         this.signupPage.submit();
-
-        driver.get("http://localhost:" + port + "/login");
 
         this.loginPage.setInputUsername("testuser3");
         this.loginPage.setInputPassword("admin3");
@@ -280,8 +270,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputPassword("summer21");
         this.signupPage.submit();
 
-        driver.get("http://localhost:" + port + "/login");
-
         this.loginPage.setInputUsername("testuser4");
         this.loginPage.setInputPassword("summer21");
         this.loginPage.submit();
@@ -334,8 +322,6 @@ class CloudstorageApplicationTests {
         this.signupPage.setInputUsername("testuser5");
         this.signupPage.setInputPassword("admin5");
         this.signupPage.submit();
-
-        driver.get("http://localhost:" + port + "/login");
 
         this.loginPage.setInputUsername("testuser5");
         this.loginPage.setInputPassword("admin5");

@@ -11,8 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -36,6 +40,8 @@ public class FileController {
 
     @Autowired
     FileService fileService;
+
+    private final long FILE_SIZE_RESTRICTION = 10000000;
 
     /**
      * Returns the home page with the active file tab.
@@ -95,19 +101,26 @@ public class FileController {
     String handleFileUpload(@ModelAttribute MultipartFile fileUpload, Model model, Authentication authentication) throws IOException {
         model.addAttribute("link", "/file");
         if (!fileUpload.isEmpty()) {
-            if (!this.fileService.isFilenameInUse(fileUpload.getOriginalFilename())) {
-                int addedRows = this.fileService.insertFile(fileUpload, this.userService.getUserId(authentication.getName()));
-                if (addedRows < 0) {
-                    model.addAttribute("failure", true);
+            if (!(fileUpload.getSize() > FILE_SIZE_RESTRICTION)) {
+                if (!this.fileService.isFilenameInUse(fileUpload.getOriginalFilename())) {
+                    int addedRows = this.fileService.insertFile(fileUpload, this.userService.getUserId(authentication.getName()));
+                    if (addedRows < 0) {
+                        model.addAttribute("failure", true);
+                        return "result";
+                    }
+                    model.addAttribute("success", true);
+                    return "result";
+                } else {
+                    model.addAttribute("error", true);
+                    model.addAttribute("errorMessage", "The filename already exists!");
                     return "result";
                 }
-                model.addAttribute("success", true);
-                return "result";
             } else {
                 model.addAttribute("error", true);
-                model.addAttribute("errorMessage", "The filename already exists!");
+                model.addAttribute("errorMessage", "The size of the file is too large. Please upload a file not bigger as 10MB.");
                 return "result";
             }
+
 
         }
 
